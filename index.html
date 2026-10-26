@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gửi em 20/10</title>
+  <meta name="theme-color" content="#1b0a1e">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; background: #1b0a1e; }
+    #lock {
+      --pink: #ff8fab; --rose: #e8325f; --cream: #fff4f7;
+      position: fixed; inset: 0; z-index: 99999; overflow: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+      background: radial-gradient(120% 80% at 50% 20%, #4a1239 0%, #2a0c26 45%, #1b0a1e 100%);
+      color: var(--cream); font-family: "Be Vietnam Pro", system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent; user-select: none;
+      transition: opacity 1.2s ease, filter 1.2s ease;
+    }
+    #lock.leave { opacity: 0; filter: blur(8px); pointer-events: none; }
+    #lock * { box-sizing: border-box; }
+
+    /* nền: sao lấp lánh + tim bay lên */
+    .lk-star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: .2;
+      animation: lkTw var(--d) ease-in-out var(--dl) infinite; }
+    @keyframes lkTw { 50% { opacity: .9; transform: scale(1.6); } }
+    .lk-float { position: absolute; bottom: -40px; font-size: var(--s); opacity: 0;
+      animation: lkUp var(--d) linear var(--dl) infinite; }
+    @keyframes lkUp { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: .55; }
+      90% { opacity: .35; } 100% { transform: translate(var(--x), -110vh) rotate(var(--r)); opacity: 0; } }
+
+    .lk-title { position: relative; font-family: "Dancing Script", cursive; font-weight: 700;
+      font-size: clamp(1.9rem, 8vw, 2.6rem); margin: 0 0 4px; text-align: center;
+      background: linear-gradient(90deg, #ffd6e0, #ff8fab, #ffd6e0); -webkit-background-clip: text; background-clip: text; color: transparent;
+      background-size: 200% 100%; animation: lkShine 4s linear infinite; }
+    @keyframes lkShine { to { background-position: -200% 0; } }
+    .lk-sub { position: relative; margin: 0 0 10px; font-size: .92rem; opacity: .75; text-align: center; font-weight: 300; }
+
+    /* trái tim lớn */
+    .lk-heart { position: relative; width: min(64vw, 250px); aspect-ratio: 100 / 90; margin: 6px 0 4px;
+      animation: lkBeat 1.6s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(255, 90, 140, .45)); }
+    .lk-heart svg { width: 100%; height: 100%; overflow: visible; }
+    @keyframes lkBeat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.06); } 24% { transform: scale(.98); } 36% { transform: scale(1.04); } }
+    .lk-heart.shake { animation: lkShake .5s ease; }
+    @keyframes lkShake { 20%, 60% { transform: translateX(-12px) rotate(-3deg); } 40%, 80% { transform: translateX(12px) rotate(3deg); } }
+    .lk-heart.ok { animation: lkOk 1s ease forwards; }
+    @keyframes lkOk { 30% { transform: scale(1.18); } 60% { transform: scale(1.05); } 100% { transform: scale(1.12); } }
+    #lkFill { transition: y .45s cubic-bezier(.3, 1.4, .5, 1), height .45s cubic-bezier(.3, 1.4, .5, 1); }
+    .lk-wave { animation: lkWave 2.4s linear infinite; }
+    @keyframes lkWave { to { transform: translateX(-100px); } }
+
+    .lk-date { position: absolute; left: 0; right: 0; top: 36%; text-align: center; pointer-events: none;
+      font-weight: 600; font-size: clamp(1.15rem, 5.4vw, 1.5rem); letter-spacing: .06em; color: #fff;
+      text-shadow: 0 2px 10px rgba(120, 0, 40, .55); }
+    .lk-date span { display: inline-block; min-width: .72em; transition: transform .2s; }
+    .lk-date span.empty { opacity: .45; }
+    .lk-date span.pop { animation: lkPop .3s ease; }
+    @keyframes lkPop { 50% { transform: translateY(-6px) scale(1.3); } }
+    .lk-date i { font-style: normal; opacity: .6; margin: 0 .08em; }
+    .lk-lockico { position: absolute; left: 0; right: 0; top: 60%; text-align: center; font-size: 1.1rem; opacity: .9; pointer-events: none; transition: transform .4s; }
+
+    .lk-msg { position: relative; min-height: 1.5em; margin: 4px 0 12px; font-size: .95rem; text-align: center; color: #ffc2d3; transition: opacity .3s; }
+    .lk-msg.err { color: #ffd1a6; }
+
+    /* bàn phím hình tim */
+    .lk-pad { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 18px; width: min(86vw, 300px); }
+    .lk-key { position: relative; border: 0; background: none; padding: 0; cursor: pointer; aspect-ratio: 100 / 90;
+      color: #fff; font: 600 1.35rem "Be Vietnam Pro", sans-serif; transition: transform .15s; touch-action: manipulation; }
+    .lk-key svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .lk-key svg path { fill: rgba(255, 143, 171, .13); stroke: rgba(255, 179, 199, .55); stroke-width: 2.5; transition: fill .2s; }
+    .lk-key b { position: relative; top: -6%; font-weight: 600; }
+    .lk-key:active, .lk-key.press { transform: scale(.88); }
+    .lk-key:active svg path, .lk-key.press svg path { fill: rgba(255, 92, 140, .55); }
+    .lk-key.fn b { font-size: 1.05rem; }
+    .lk-key:focus-visible { outline: 2px dashed var(--pink); outline-offset: 4px; border-radius: 12px; }
+
+    .lk-hint { position: relative; margin-top: 14px; border: 0; background: none; color: #ffb3c7; opacity: .7; font: 300 .82rem "Be Vietnam Pro", sans-serif; cursor: pointer; text-decoration: underline dotted; }
+
+    .lk-load { position: relative; width: min(70vw, 260px); height: 6px; border-radius: 9px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: 6px; opacity: 0; transition: opacity .3s; }
+    .lk-load.show { opacity: 1; }
+    .lk-load i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, #ff8fab, #e8325f); border-radius: 9px; transition: width .2s; }
+
+    .lk-burst { position: fixed; pointer-events: none; z-index: 100000; font-size: var(--fs); left: 50%; top: 45%;
+      animation: lkBurst 1.4s cubic-bezier(.15, .8, .3, 1) forwards; }
+    @keyframes lkBurst { 0% { transform: translate(-50%, -50%) scale(.2); opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1) rotate(var(--r)); opacity: 0; } }
+
+    @media (max-height: 640px) { .lk-heart { width: min(48vw, 190px); } .lk-pad { gap: 6px 16px; width: min(78vw, 250px); } .lk-sub { display: none; } }
+    @media (prefers-reduced-motion: reduce) { .lk-heart, .lk-float, .lk-star { animation: none !important; } }
+  </style>
+</head>
+<body>
+  <div id="lock">
+    <div id="lkBg" aria-hidden="true"></div>
+    <h1 class="lk-title">Có quà cho em nè</h1>
+    <p class="lk-sub">Mật khẩu là ngày tụi mình bắt đầu thương nhau</p>
+
+    <div class="lk-heart" id="lkHeart">
+      <svg viewBox="0 0 100 90" aria-hidden="true">
+        <defs>
+          <clipPath id="lkClip"><path id="lkPath" d="M50 86 C 22 66 3 49 3 28 C 3 13 14 3 28 3 C 38 3 46 9 50 17 C 54 9 62 3 72 3 C 86 3 97 13 97 28 C 97 49 78 66 50 86Z"/></clipPath>
+          <linearGradient id="lkGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ff8fab"/><stop offset="1" stop-color="#c2185b"/>
+          </linearGradient>
+          <linearGradient id="lkShine" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g clip-path="url(#lkClip)">
+          <rect x="0" y="0" width="100" height="90" fill="rgba(255,143,171,.08)"/>
+          <g id="lkLiquid">
+            <rect id="lkFill" x="0" y="90" width="100" height="0" fill="url(#lkGrad)"/>
+            <path class="lk-wave" id="lkWave" d="M0 0 Q 12.5 -4 25 0 T 50 0 T 75 0 T 100 0 T 125 0 T 150 0 T 175 0 T 200 0 V 6 H 0 Z" fill="#ff8fab" transform="translate(0 90)"/>
+          </g>
+          <ellipse cx="30" cy="24" rx="16" ry="10" fill="url(#lkShine)" transform="rotate(-30 30 24)"/>
+        </g>
+        <use href="#lkPath" fill="none" stroke="#ffb3c7" stroke-width="1.6"/>
+      </svg>
+      <div class="lk-date" id="lkDate"></div>
+      <div class="lk-lockico" id="lkIco">🔒</div>
+    </div>
+
+    <p class="lk-msg" id="lkMsg">Nhập ngày / tháng / năm nhé</p>
+    <div class="lk-pad" id="lkPad"></div>
+    <div class="lk-load" id="lkLoad"><i></i></div>
+    <button class="lk-hint" id="lkHintBtn" type="button">Quên rồi hả? Gợi ý nè</button>
+  </div>
+
+  <script>
+  (() => {
+    const SALT = "6gRYWeSmfbXwc9ke0VcLMg==", ITER = 600000, FILES = ["ba3542192be6.bin", "f9006e7765ef.bin", "7ba450551ce6.bin", "67d2802fc545.bin", "a05f09bc98ad.bin", "640e447960e3.bin", "6e69bdc20a52.bin", "3d63b865d8a8.bin", "d648457e786e.bin", "e0d8ae6e9940.bin", "193d60112b7b.bin", "eff198f2cbf2.bin", "104d57db899c.bin", "8fe6876bd05b.bin", "a025420a6a03.bin", "4b3848a4fe7a.bin", "b165b2e5bb14.bin", "757eec5ad2aa.bin", "ef053d6f2af9.bin", "6dca2f3bb013.bin", "6c2089ac8cc9.bin", "40e952b7537d.bin", "747a5f193440.bin", "a7868c9d3b08.bin", "a060d959936d.bin", "8a3d9baee786.bin", "574e2cc6479e.bin", "793604a7c844.bin", "6379efac0f03.bin", "6b9293fc4fe1.bin", "6969c280a190.bin", "8e10fd4ef63f.bin", "d4fa20b64295.bin"];
+    const $ = s => document.getElementById(s);
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+    const HEART = "M50 86 C 22 66 3 49 3 28 C 3 13 14 3 28 3 C 38 3 46 9 50 17 C 54 9 62 3 72 3 C 86 3 97 13 97 28 C 97 49 78 66 50 86Z";
+
+    // nền
+    const bg = $("lkBg");
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement("i"); s.className = "lk-star";
+      s.style.cssText = `left:${rand(0,100)}%;top:${rand(0,100)}%;--d:${rand(2,5)}s;--dl:${rand(0,5)}s`;
+      bg.appendChild(s);
+    }
+    for (let i = 0; i < 16; i++) {
+      const h = document.createElement("span"); h.className = "lk-float";
+      h.textContent = ["💗", "🌸", "💕", "✨", "💖"][i % 5];
+      h.style.cssText = `left:${rand(0,100)}%;--s:${rand(12,24)}px;--d:${rand(9,16)}s;--dl:${rand(0,12)}s;--x:${rand(-60,60)}px;--r:${rand(-90,90)}deg`;
+      bg.appendChild(h);
+    }
+
+    // tải sẵn dữ liệu đã mã hoá trong lúc em nhập
+    const cache = {};
+    const get = n => cache[n] || (cache[n] = fetch("data/" + n)
+      .then(r => { if (!r.ok) throw new Error("tải lỗi " + r.status); return r.arrayBuffer(); })
+      .catch(e => { delete cache[n]; throw e; }));
+    get(FILES[0]);
+    setTimeout(() => FILES.slice(1).forEach(get), 800);
+
+    // bàn phím tim
+    const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "⌫", "0", "♡"];
+    const pad = $("lkPad");
+    keys.forEach(k => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "lk-key" + (isNaN(k) ? " fn" : ""); b.dataset.k = k;
+      b.setAttribute("aria-label", k === "⌫" ? "Xoá" : k === "♡" ? "Mở" : k);
+      b.innerHTML = `<svg viewBox="0 0 100 90"><path d="${HEART}"/></svg><b>${k}</b>`;
+      b.addEventListener("click", () => press(k));
+      pad.appendChild(b);
+    });
+
+    let digits = "", busy = false;
+    const msg = (t, err) => { const m = $("lkMsg"); m.textContent = t; m.classList.toggle("err", !!err); };
+    function render(popAt) {
+      const d = (digits + "        ").slice(0, 8).split("");
+      const ph = "ddmmyyyy";
+      const cell = (i) => `<span class="${d[i] === " " ? "empty" : ""}${i === popAt ? " pop" : ""}">${d[i] === " " ? ph[i] : d[i]}</span>`;
+      $("lkDate").innerHTML = cell(0) + cell(1) + "<i>/</i>" + cell(2) + cell(3) + "<i>/</i>" + cell(4) + cell(5) + cell(6) + cell(7);
+      const lvl = digits.length / 8;                 // tim đầy dần theo số đã nhập
+      const y = 90 - lvl * 84;
+      $("lkFill").setAttribute("y", y + 3);
+      $("lkFill").setAttribute("height", 90 - y);
+      $("lkWave").setAttribute("transform", `translate(0 ${y})`);
+      $("lkWave").style.display = digits.length ? "" : "none";
+    }
+    function press(k) {
+      if (busy) return;
+      const btn = pad.querySelector(`[data-k="${k}"]`);
+      if (btn) { btn.classList.add("press"); setTimeout(() => btn.classList.remove("press"), 140); }
+      if (k === "⌫") { digits = digits.slice(0, -1); render(); return; }
+      if (k === "♡") { if (digits.length === 8) tryOpen(); else msg("Nhập đủ 8 số nha: ngày, tháng, năm 🥰"); return; }
+      if (digits.length >= 8) return;
+      digits += k; render(digits.length - 1);
+      if (digits.length === 8) setTimeout(tryOpen, 350);
+    }
+    addEventListener("keydown", e => {
+      if (/^[0-9]$/.test(e.key)) press(e.key);
+      else if (e.key === "Backspace") press("⌫");
+      else if (e.key === "Enter") press("♡");
+    });
+    $("lkHintBtn").addEventListener("click", () => msg("Gợi ý: đúng ngày Giáng sinh năm 2024 đó 🎄"));
+
+    async function keyFrom(pw) {
+      const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(SALT), iterations: ITER, hash: "SHA-256" },
+        base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    }
+    const dec = async (key, buf) => crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(buf, 0, 12) }, key, new Uint8Array(buf, 12));
+
+    async function tryOpen() {
+      if (!window.crypto || !crypto.subtle) { msg("Mở bằng link https (GitHub Pages) nha, file mở trực tiếp không chạy được", true); return; }
+      busy = true; msg("Để anh xem nào…");
+      let key, manifest;
+      try {
+        key = await keyFrom(digits);
+        manifest = JSON.parse(new TextDecoder().decode(await dec(key, await get(FILES[0]))));
+      } catch (e) {
+        console.warn("mở khoá lỗi:", e);
+        busy = false;
+        const h = $("lkHeart"); h.classList.remove("shake"); void h.offsetWidth; h.classList.add("shake");
+        setTimeout(() => h.classList.remove("shake"), 520);
+        if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+        msg(["Hông phải ngày đó đâu 🥺 thử lại nha", "Sai rồi nè, nghĩ kỹ lại xem 😤", "Ngày đặc biệt vậy mà quên hả 😢"][Math.random() * 3 | 0], true);
+        digits = ""; setTimeout(render, 450);
+        return;
+      }
+      // đúng mật khẩu
+      $("lkHeart").classList.add("ok"); $("lkIco").textContent = "🔓";
+      msg("Đúng rồi! Đang mở quà cho em… 💖");
+      const bar = $("lkLoad"); bar.classList.add("show");
+      const entries = Object.entries(manifest.files);
+      let done = 0;
+      window.__M = {};
+      await Promise.all(entries.map(async ([path, [name, type]]) => {
+        const plain = await dec(key, await get(name));
+        window.__M[path] = URL.createObjectURL(new Blob([plain], { type }));
+        bar.firstElementChild.style.width = (++done / entries.length * 100) + "%";
+      }));
+      mount(manifest);
+    }
+
+    function burst() {
+      const ic = ["💖", "💗", "🌸", "✨", "💕", "🌷", "❤️"];
+      for (let i = 0; i < 40; i++) {
+        const s = document.createElement("span"); s.className = "lk-burst"; s.textContent = ic[i % ic.length];
+        const a = rand(0, Math.PI * 2), d = rand(120, Math.max(innerWidth, innerHeight) * .6);
+        s.style.cssText = `--x:${Math.cos(a) * d}px;--y:${Math.sin(a) * d}px;--r:${rand(-180,180)}deg;--fs:${rand(16,34)}px;animation-delay:${rand(0,.2)}s`;
+        document.body.appendChild(s); setTimeout(() => s.remove(), 1800);
+      }
+    }
+
+    function mount(m) {
+      const doc = new DOMParser().parseFromString(m.html, "text/html");
+      document.title = doc.title;
+      const st = document.createElement("style"); st.textContent = m.css; document.head.appendChild(st);
+      const lock = $("lock");
+      document.body.className = doc.body.className;
+      [...doc.body.childNodes].forEach(n => document.body.insertBefore(document.importNode(n, true), lock));
+      const sc = document.createElement("script"); sc.textContent = m.js; document.body.appendChild(sc);
+      burst();
+      setTimeout(() => { lock.classList.add("leave"); setTimeout(() => lock.remove(), 1300); }, 500);
+    }
+
+    /* ---------- chống lấy ảnh: chuột phải, giữ lâu, kéo thả, phím tắt, F12 ---------- */
+    const guardCss = document.createElement("style");
+    guardCss.textContent = `img, video { -webkit-touch-callout: none; -webkit-user-drag: none; user-select: none; }
+      body { -webkit-user-select: none; user-select: none; }
+      #peek { position: fixed; inset: 0; z-index: 100001; display: none; place-items: center; text-align: center; padding: 24px;
+        background: #1b0a1e; color: #ffd6e0; font: 400 1.05rem "Be Vietnam Pro", sans-serif; }
+      #peek b { display: block; font: 700 2rem "Dancing Script", cursive; color: #ff8fab; margin-bottom: 8px; }`;
+    document.head.appendChild(guardCss);
+    ["contextmenu", "dragstart", "selectstart", "copy"].forEach(ev =>
+      addEventListener(ev, e => e.preventDefault(), { capture: true }));
+    addEventListener("keydown", e => {
+      const k = e.key.toLowerCase(), c = e.ctrlKey || e.metaKey;
+      if (e.key === "F12" || (c && e.shiftKey && "ijc".includes(k)) || (c && e.altKey && "ijc".includes(k)) || (c && "usp".includes(k))) {
+        e.preventDefault(); e.stopPropagation();
+      }
+    }, { capture: true });
+
+    // mở DevTools bằng menu trình duyệt → lệnh debugger bị dừng lâu → xoá sạch nội dung, phải nhập lại mật khẩu
+    let wiped = false;
+    function wipe() {
+      if (wiped) return; wiped = true;
+      document.querySelectorAll("video").forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
+      if (window.__M) { Object.values(window.__M).forEach(u => URL.revokeObjectURL(u)); window.__M = {}; }
+      document.body.innerHTML = `<div id="peek" style="display:grid"><div><b>Ơ kìa 😤</b>Không được xem trộm đâu nha.<br>Đóng công cụ dev rồi tải lại trang nhé.</div></div>`;
+    }
+    setInterval(() => {
+      const t = performance.now();
+      (function () { debugger; })();
+      if (performance.now() - t > 120) wipe();
+    }, 800);
+
+    render();
+  })();
+  </script>
+</body>
+</html>
